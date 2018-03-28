@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerViewAllTasks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/block"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1.5">
+
+            <ImageView
+                android:id="@+id/face"
+                android:layout_width="92dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/face"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/title_no_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/face"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:text="@string/title_no_task"
+                android:textColor="#9E9E9E"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/text_no_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_no_task"
+                android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/text_no_task"
+                android:textAlignment="center"
+                android:textColor="#D1D1D1"
+                android:textSize="16sp"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_weight="0.5"
+            android:orientation="vertical"
+            android:gravity="bottom|center_horizontal">
+
+            <TextView
+                android:id="@+id/subtext_no_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
+                android:text="@string/subtext_no_task"
+                android:textSize="14sp"
+                android:textColor="#9E9E9E"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"/>
+
+            <ImageView
+                android:id="@+id/arrow"
+                android:layout_width="80dp"
+                android:layout_height="34dp"
+                android:src="@drawable/arrow"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

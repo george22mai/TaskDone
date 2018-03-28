@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Header -->
+    <dimen name="header_height">59dp</dimen>
+
+    <dimen name="height_logo">29dp</dimen>
+    <dimen name="width_logo">51dp</dimen>
+    <dimen name="marginLeft_logo">20dp</dimen>
+
+    <dimen name="marginLeft_title">10dp</dimen>
+    <dimen name="font_title">24sp</dimen>
+    <dimen name="font_welcome">20sp</dimen>
+    <dimen name="marginRight_welcome">20dp</dimen>
+
+    <dimen name="height_settings">25dp</dimen>
+    <dimen name="width_settings">25dp</dimen>
+    <dimen name="marginRight_settings">20dp</dimen>
+    <!--       -->
+
+    <dimen name="height_button">36dp</dimen>
+    <dimen name="width_button">320dp</dimen>
+    <dimen name="font_button">16sp</dimen>
+    <dimen name="font_offline">14sp</dimen>
+
+    <!-- Slideshow -->
+    <dimen name="welcome_image1_height">150dp</dimen>
+    <dimen name="welcome_image1_width">163dp</dimen>
+
+    <dimen name="welcome_image2_height">150dp</dimen>
+    <dimen name="welcome_image2_width">129dp</dimen>
+
+    <dimen name="welcome_image3_height">150dp</dimen>
+    <dimen name="welcome_image3_width">283dp</dimen>
+    <!--           -->
+
+    <!-- TaskList -->
+    <dimen name="font_task">16sp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <!--          -->
+</resources>

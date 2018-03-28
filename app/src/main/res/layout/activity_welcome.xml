@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@color/white">
+
+
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        app:cardBackgroundColor="@color/colorPrimary"
+        android:elevation="5dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_marginLeft="@dimen/marginLeft_logo"
+                android:layout_width="@dimen/width_logo"
+                android:layout_height="@dimen/height_logo"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/logo"
+                android:layout_marginLeft="@dimen/marginLeft_title"
+                android:layout_centerVertical="true"
+                android:text="@string/title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/welcome_text"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:textSize="@dimen/font_welcome"
+                android:layout_marginRight="@dimen/marginRight_welcome"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_centerHorizontal="true"/>
+
+        <LinearLayout
+            android:id="@+id/layoutDots"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_below="@id/view_pager"
+            android:layout_marginTop="20dp"/>
+
+    </RelativeLayout>
+
+    <!--<android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="@dimen/width_button"
+        android:layout_height="@dimen/height_button"
+        card_view:cardBackgroundColor="@color/white"
+        android:foreground="?android:attr/selectableItemBackground"
+        card_view:cardElevation="5dp"
+        card_view:cardCornerRadius="15dip"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/offline">
+
+        <RelativeLayout
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/loginText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/login"
+                android:textColor="#393939"
+                android:textSize="@dimen/font_button" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3dp"
+                android:layout_toLeftOf="@id/loginText"
+                app:srcCompat="@drawable/ic_action_name" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>-->
+
+    <TextView
+        android:id="@+id/offline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/offline"
+        android:textColor="@color/black"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:textSize="@dimen/font_offline"
+        android:visibility="invisible"/>
+
+    <RelativeLayout
+        android:id="@+id/button"
+        android:layout_width="@dimen/width_button"
+        android:layout_height="@dimen/height_button"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimary"
+        android:layout_marginBottom="15dp"
+        android:layout_above="@+id/offline"
+        android:layout_centerHorizontal="true">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/textButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login"
+                android:fontFamily="sans-serif"
+                android:textSize="@dimen/font_button"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/white"
+                android:layout_marginRight="17dp"/>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="7dp"
+                android:layout_height="13dp"
+                facebook:srcCompat="@drawable/fb"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/textButton"
+                android:layout_marginRight="10dp"
+                android:tint="@color/white"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

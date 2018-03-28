@@ -1,0 +1,50 @@
+<resources>
+    <string name="facebook_app_id">128852824406142</string>
+    <string name="fb_login_protocol_scheme">fb128852824406142</string>
+
+    <string name="app_name">TaskDone</string>
+    <string name="title">TaskDone</string>
+    <string name="welcome_text">Hello!</string>
+
+    <string name="title_screen1">Organize your tasks</string>
+    <string name="text_screen1">Do this by day and by colors and you won`t have to remember anything.</string>
+
+    <string name="title_screen2">Work on your tasks</string>
+    <string name="text_screen2">All that is left for you is to focus on how to finish them. Be productive!</string>
+
+    <string name="title_screen3">Relax</string>
+    <string name="text_screen3">Good job, you finished what you had to do, now it`s time to relax.</string>
+
+    <string name="login">Login with Facebook</string>
+    <string name="offline">Continue without an account</string>
+
+    <string name="addTask">Add a task</string>
+    <string name="hintEditText">Name or description of the task</string>
+
+    <string name="title_no_task">You don’t have any task.</string>
+    <string name="text_no_task">When you’ll add a new one, it will be here and you won’t have to remember it anymore :)</string>
+    <string name="subtext_no_task">Let’s add a new task!</string>
+    <string name="textColorTask">Choose a color for the task:</string>
+    <string name="filterText">Filter your tasks:</string>
+    <string name="noEnteredText">You can’t add a task without a description!</string>
+    <string name="feedback">Report a bug / Send feedback</string>
+    <string name="share">Share application for a friend</string>
+    <string name="disconnect">Disconnect from this account</string>
+    <string name="reset">Reset your tasks</string>
+    <string name="resetSecure">Are you sure you want to reset?</string>
+    <string name="afterResetDb">All your tasks have been reset.</string>
+
+    <string name="tutorial1">To delete a task, simply swipe it to the right side of the screen. If you want to filter tasks by color, use the colored buttons at the top.</string>
+
+    <string name="settings_version">Version 1.0.0 / 30.08.2017</string>
+    <string name="settings_text">Created for you with joy.</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
