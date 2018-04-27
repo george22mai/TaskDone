@@ -28,9 +28,9 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.taskdone.Fragments.AllTasksFragment;
-import com.taskdone.Fragments.FolderFragment;
-import com.taskdone.Utils.FolderModel;
+import com.taskdone.Fragments.ShowTasksFragment;
+import com.taskdone.Utils.Objects.Folder;
+import com.taskdone.Utils.Singleton.Query;
 
 import org.json.JSONObject;
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllTasksFragment());
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ShowTasksFragment());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportActionBar().setTitle("TaskDone");
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllTasksFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ShowTasksFragment()).commit();
 
         fillMenuWithFolders(navigationView);
         infosFromFacebook(navigationView);
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity
         if (id == 9000) {
             findViewById(R.id.fab).setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("TaskDone");
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new AllTasksFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ShowTasksFragment()).commit();
         } else if (id == 991) {
             resetDb();
         } else if (id == 992) {
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity
             logout();
         } else {
                 findViewById(R.id.fab).setVisibility(View.VISIBLE);
-                FolderFragment folderFragment = new FolderFragment();
+                ShowTasksFragment folderFragment = new ShowTasksFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("title", item.getTitle().toString());
                 folderFragment.setArguments(bundle);
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("folders").addChildEventListener(new ChildEventListener() {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot.exists()) {
-                    subMenu.add(0, 1, 1, ((FolderModel) dataSnapshot.getValue(FolderModel.class)).getTitle()).setIcon(R.drawable.ic_folder);
+                    subMenu.add(0, 1, 1, ((Folder) dataSnapshot.getValue(Folder.class)).getTitle()).setIcon(R.drawable.ic_folder);
                 }
             }
 
@@ -170,12 +170,12 @@ public class MainActivity extends AppCompatActivity
             request.executeAsync();
         }
         if (sharedPreferences.getString("username", "TaskDone") == "TaskDone") {
-            name.setVisibility(4);
+            name.setVisibility(View.INVISIBLE);
         } else {
             name.setText(sharedPreferences.getString("username", "TaskDone"));
         }
         if (sharedPreferences.getString("email", "contact@taskdone.com") == "contact@taskdone.com") {
-            email.setVisibility(4);
+            email.setVisibility(View.INVISIBLE);
         } else {
             email.setText(sharedPreferences.getString("email", "contact@taskdone.com"));
         }
@@ -186,12 +186,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     void resetDb() {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.fragment), getResources().getString(R.string.resetSecure), 0).setActionTextColor(getResources().getColor(R.color.white)).setAction("YES, RESET", new View.OnClickListener() {
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.fragment), getResources().getString(R.string.resetSecure), Snackbar.LENGTH_LONG)
+                .setActionTextColor(getResources().getColor(R.color.white))
+                .setAction("YES, RESET", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("list").setValue(null);
-                FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("tasksCompleted").removeValue();
-                FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("folders").removeValue();
+                Query.getInstance().clearDatabase();
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });

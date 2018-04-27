@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.widget.SwitchCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,13 +31,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.taskdone.AddTaskActivity;
 import com.taskdone.MainActivity;
 import com.taskdone.R;
-import com.taskdone.Utils.DeadlineNotification;
-import com.taskdone.Utils.ReminderNotification;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import com.taskdone.Utils.Notifications.DeadlineNotification;
+import com.taskdone.Utils.Objects.Task;
+import com.taskdone.Utils.Singleton.Query;
 
-import static com.taskdone.TaskInfoActivity.TASK_ID;
+import java.util.HashMap;
 
 public class AddTaskFragment extends Fragment {
     public View view;
@@ -124,20 +120,6 @@ public class AddTaskFragment extends Fragment {
                         .commit();
             }
         });
-//        view.findViewById(R.id.reminders).setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (((AddTaskActivity) AddTaskFragment.this.getActivity()).existDeadline.booleanValue()) {
-//                    //getFragmentManager().beginTransaction()
-//                    // .setCustomAnimations(R.anim.to_add_anim_start, R.anim.to_add_anim_end, R.anim.to_menu_anim_start, R.anim.to_menu_anim_end)
-//                    // .addToBackStack("main")
-//                    // .replace(R.id.fragment_add_task, new ChooseRemindersFragment())
-//                    // .commit();
-//                } else {
-//                    Toast.makeText(getContext(), "First, you need to set a deadline!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
         view.findViewById(R.id.cancel).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,22 +130,15 @@ public class AddTaskFragment extends Fragment {
         view.findViewById(R.id.confirm).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                String folder = ((AddTaskActivity) getActivity()).folder;
-                String timeStamp = getTaskIdFromCurrentTime();
-                String text = editText.getText().toString();
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
-                        .child("users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("list")
-                        .child(timeStamp);
+                Task task = new Task();
+                task.id = getTaskIdFromCurrentTime();
+                task.text = editText.getText().toString();;
+                task.folder = ((AddTaskActivity) getActivity()).folder;
+                if (switchPermanentNotification.isChecked()) task.permanentNotification = true;
 
-                if (text.trim().length() != 0) {
-                    reference.child("id").setValue(timeStamp);
-                    reference.child("text").setValue(text);
-                    if (folder != null) reference.child("folder").setValue(folder);
-                    if (((AddTaskActivity) getActivity()).existDeadline) startDeadlineNotification(text, Long.parseLong(timeStamp));
-                    if (switchPermanentNotification.isChecked()) reference.child("permanentNotification").setValue(true);
-//                    if (((AddTaskActivity) getActivity()).reminders != 0) startRemindersNotifications(text);
+                if (task.text.trim().length() != 0) {
+                    Query.getInstance().addTaskToDatabase(task);
+                    if (((AddTaskActivity) getActivity()).existDeadline) startDeadlineNotification(task.text, Long.parseLong(task.id));
 
                     startActivity(new Intent(AddTaskFragment.this.getContext(), MainActivity.class));
                     getActivity().finish();
@@ -219,20 +194,4 @@ public class AddTaskFragment extends Fragment {
                 .child(String.valueOf(id));
         ref.child("deadline").setValue(deadlineForDatabase);
     }
-
-//    void startRemindersNotifications(String text) {
-//        ArrayList<Long> reminders = ((AddTaskActivity) getActivity()).remindersMilis;
-//        HashMap<String, Integer> deadline = ((AddTaskActivity) getActivity()).deadline;
-//        Calendar alarm = Calendar.getInstance();
-//        alarm.set(((Integer) deadline.get("year")).intValue(), ((Integer) deadline.get("month")).intValue(), ((Integer) deadline.get("day")).intValue(), ((Integer) deadline.get("hour")).intValue(), ((Integer) deadline.get("minute")).intValue());
-//        long deadlineMilis = alarm.getTimeInMillis();
-//        Intent intent = new Intent(getContext(), ReminderNotification.class);
-//        intent.putExtra("text", text);
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-//        Iterator it = reminders.iterator();
-//        while (it.hasNext()) {
-//            alarmManager.set(0, deadlineMilis - ((Long) it.next()).longValue(), pendingIntent);
-//        }
-//    }
 }

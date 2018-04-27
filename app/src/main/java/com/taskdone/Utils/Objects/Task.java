@@ -1,6 +1,6 @@
-package com.taskdone.Utils;
+package com.taskdone.Utils.Objects;
 
-public class ItemModel {
+public class Task {
     public String color;
     public String folder;
     public String id;
@@ -9,10 +9,10 @@ public class ItemModel {
     public String text;
     public String deadline;
 
-    public ItemModel() {
+    public Task() {
     }
 
-    public ItemModel(String text, String id, String folder, int idPermanentNotification, boolean permanentNotification, String deadline) {
+    public Task(String text, String id, String folder, int idPermanentNotification, boolean permanentNotification, String deadline) {
         this.id = id;
         this.text = text;
         this.folder = folder;

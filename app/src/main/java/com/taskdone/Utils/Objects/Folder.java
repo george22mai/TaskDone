@@ -1,6 +1,6 @@
-package com.taskdone.Utils;
+package com.taskdone.Utils.Objects;
 
-public class FolderModel {
+public class Folder {
     String title = this.title;
 
     public String getTitle() {

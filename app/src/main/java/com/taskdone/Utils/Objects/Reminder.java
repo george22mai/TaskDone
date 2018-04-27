@@ -1,4 +1,4 @@
-package com.taskdone.Utils;
+package com.taskdone.Utils.Objects;
 
 public class Reminder {
     private boolean isChecked = false;

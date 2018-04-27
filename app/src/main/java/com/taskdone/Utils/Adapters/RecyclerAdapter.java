@@ -1,4 +1,4 @@
-package com.taskdone.Utils;
+package com.taskdone.Utils.Adapters;
 
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -9,11 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.taskdone.R;
+import com.taskdone.Utils.Objects.Task;
 
 import java.util.List;
 
 public class RecyclerAdapter extends Adapter<RecyclerAdapter.ItemViewHolder> {
-    private List<ItemModel> list;
+    private List<Task> list;
 
     class ItemViewHolder extends ViewHolder {
         ImageView dot = ((ImageView) this.itemView.findViewById(R.id.dot));
@@ -24,7 +25,7 @@ public class RecyclerAdapter extends Adapter<RecyclerAdapter.ItemViewHolder> {
         }
     }
 
-    public RecyclerAdapter(List<ItemModel> list) {
+    public RecyclerAdapter(List<Task> list) {
         this.list = list;
     }
 
@@ -33,7 +34,7 @@ public class RecyclerAdapter extends Adapter<RecyclerAdapter.ItemViewHolder> {
     }
 
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.listItemText.setText(((ItemModel) this.list.get(position)).text);
+        holder.listItemText.setText(((Task) this.list.get(position)).text);
     }
 
     public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -21,18 +21,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.taskdone.AddTaskActivity;
-import com.taskdone.Fragments.FragmentsForTaskInfo.TaskInfoFragment;
 import com.taskdone.R;
 import com.taskdone.TaskInfoActivity;
-import com.taskdone.Utils.FolderModelSelect;
-import com.taskdone.Utils.FolderMoldelSelectAdapter;
+import com.taskdone.Utils.Objects.FolderSelect;
+import com.taskdone.Utils.Adapters.FolderMoldelSelectAdapter;
+import com.taskdone.Utils.Singleton.Query;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class ChooseFolderFragment extends Fragment {
     FolderMoldelSelectAdapter adapter;
-    List<FolderModelSelect> list = new ArrayList();
+    List<FolderSelect> list = new ArrayList();
     ListView listView;
     View view;
 
@@ -42,7 +43,7 @@ public class ChooseFolderFragment extends Fragment {
 
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             if (dataSnapshot.exists()) {
-                ChooseFolderFragment.this.list.add((FolderModelSelect) dataSnapshot.getValue(FolderModelSelect.class));
+                ChooseFolderFragment.this.list.add((FolderSelect) dataSnapshot.getValue(FolderSelect.class));
                 ChooseFolderFragment.this.adapter.notifyDataSetChanged();
             }
         }
@@ -82,7 +83,7 @@ public class ChooseFolderFragment extends Fragment {
         this.view = inflater.inflate(R.layout.fragment_choose_folder, container, false);
         setHasOptionsMenu(true);
         FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("folders").addChildEventListener(new C07481());
-        listView = (ListView) this.view.findViewById(R.id.listView);
+        listView = (ListView) view.findViewById(R.id.listView);
         listView.setDivider(null);
         listView.setDividerHeight(0);
         adapter = new FolderMoldelSelectAdapter(getContext(), R.layout.radio_button_item, this.list);
@@ -127,14 +128,7 @@ public class ChooseFolderFragment extends Fragment {
         builder.setPositiveButton("CREATE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                FirebaseDatabase.getInstance()
-                        .getReference()
-                        .child("users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("folders")
-                        .child(String.valueOf(Calendar.getInstance().getTimeInMillis()))
-                        .child("title")
-                        .setValue(editText.getText().toString());
+                Query.getInstance().createFolder(editText.getText().toString());
                 dialogInterface.dismiss();
             }
         });

@@ -1,4 +1,4 @@
-package com.taskdone.Utils;
+package com.taskdone.Utils.Notifications;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;

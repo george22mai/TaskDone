@@ -4,11 +4,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.Snackbar.Callback;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat.InboxStyle;
@@ -22,7 +19,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -33,36 +30,37 @@ import com.google.firebase.database.ValueEventListener;
 import com.taskdone.MainActivity;
 import com.taskdone.R;
 import com.taskdone.TaskInfoActivity;
-import com.taskdone.Utils.ItemModel;
-import com.taskdone.Utils.RecyclerAdapter;
+import com.taskdone.Utils.Objects.Task;
+import com.taskdone.Utils.Singleton.Query;
+import com.taskdone.Utils.Adapters.RecyclerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AllTasksFragment extends Fragment {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class ShowTasksFragment extends Fragment {
     SimpleCallback itemTouchHelperCallback = new SimpleCallback(0, 12) {
         public boolean onMove(RecyclerView recyclerView, ViewHolder viewHolder, ViewHolder target) {
             return false;
         }
 
         public void onSwiped(ViewHolder viewHolder, int direction) {
-            final ItemModel removedTask;
+            final Task removedTask;
             if (direction == 8) {
                 final int removedTaskPosition = viewHolder.getAdapterPosition();
                 removedTask = list.get(removedTaskPosition);
-                final DatabaseReference mDatabaseReferenceForDelete = FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + "/list/" + ((ItemModel) AllTasksFragment.this.list.get(viewHolder.getAdapterPosition())).id);
                 linearLayout = getActivity().findViewById(R.id.fragment);
-                final Snackbar snackbar = Snackbar.make(AllTasksFragment.this.linearLayout, "You’ve just completed a task.", 0).setActionTextColor(AllTasksFragment.this.getResources().getColor(R.color.white)).setAction("Undo", new OnClickListener() {
+                final Snackbar snackbar = Snackbar.make(linearLayout, "You’ve just completed a task.", 0).setActionTextColor(getResources().getColor(R.color.white)).setAction("Undo", new OnClickListener() {
                     public void onClick(View v) {
-                        AllTasksFragment.this.list.add(removedTaskPosition, removedTask);
-                        AllTasksFragment.this.recyclerView.setAdapter(new RecyclerAdapter(AllTasksFragment.this.list));
-                        mDatabaseReferenceForDelete.child("id").setValue(removedTask.id);
-                        mDatabaseReferenceForDelete.child("text").setValue(removedTask.text);
-                        mDatabaseReferenceForDelete.child("color").setValue(removedTask.color);
-                        AllTasksFragment.this.updateNumberOfTasksCompleted(true);
+                        list.add(removedTaskPosition, removedTask);
+                        ShowTasksFragment.this.recyclerView.setAdapter(new RecyclerAdapter(ShowTasksFragment.this.list));
+                        Query.getInstance().undoTaskDatabase(removedTask);
+                        mAdapter.notifyDataSetChanged();
                     }
                 });
-                mDatabaseReferenceForDelete.removeValue();
-                AllTasksFragment.this.updateNumberOfTasksCompleted(false);
+                query.deleteTaskFromDatabase(removedTask);
+                ShowTasksFragment.this.updateNumberOfTasksCompleted(false);
                 snackbar.getView().setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 snackbar.addCallback(new Snackbar.Callback(){
                     @Override
@@ -73,35 +71,22 @@ public class AllTasksFragment extends Fragment {
                     }
                 });
                 snackbar.show();
-                AllTasksFragment.this.list.remove(viewHolder.getAdapterPosition());
-                AllTasksFragment.this.recyclerView.setAdapter(new RecyclerAdapter(AllTasksFragment.this.list));
-                snackbar.addCallback(new Callback() {
-                    public void onDismissed(Snackbar transientBottomBar, int event) {
-                        NotificationManager notificationManager = (NotificationManager) AllTasksFragment.this.getActivity().getSystemService("notification");
-                        SharedPreferences sharedPreferences = AllTasksFragment.this.getContext().getSharedPreferences("general", 0);
-                        Editor editor = sharedPreferences.edit();
-                        if (removedTask.idPermanentNotification != null)notificationManager.cancel(removedTask.idPermanentNotification.intValue());
-                        editor.putInt("activePNotifications", sharedPreferences.getInt("activePNotifications", 0) - 1).commit();
-                        if (sharedPreferences.getInt("activePNotifications", 0) == 0) {
-                            notificationManager.cancel(100);
-                        }
-                    }
-                });
+                list.remove(viewHolder.getAdapterPosition());
+                mAdapter.notifyDataSetChanged();
             } else if (direction == 4) {
-                removedTask = (ItemModel) AllTasksFragment.this.list.get(viewHolder.getAdapterPosition());
-                Intent intent = new Intent(AllTasksFragment.this.getContext(), TaskInfoActivity.class);
+                removedTask = list.get(viewHolder.getAdapterPosition());
+                Intent intent = new Intent(ShowTasksFragment.this.getContext(), TaskInfoActivity.class);
                 intent.putExtra("idTask", removedTask.id);
-                AllTasksFragment.this.startActivity(intent);
-                AllTasksFragment.this.getActivity().overridePendingTransition(R.anim.to_add_anim_start, R.anim.to_add_anim_end);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.to_add_anim_start, R.anim.to_add_anim_end);
             }
         }
     };
     LinearLayoutManager linearLayoutManager;
-    List<ItemModel> list = new ArrayList();
-    RecyclerAdapter mAdapter;
+    List<Task> list = new ArrayList();
+    RecyclerAdapter mAdapter = new RecyclerAdapter(list);
     LinearLayout mBlock;
     Builder notification;
-    RecyclerView recyclerView;
     DatabaseReference referenceToAllTasks;
     LinearLayout linearLayout;
     InboxStyle style = new InboxStyle();
@@ -111,13 +96,13 @@ public class AllTasksFragment extends Fragment {
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             if (dataSnapshot.exists()) {
-                ItemModel task = dataSnapshot.getValue(ItemModel.class);
+                Task task = dataSnapshot.getValue(Task.class);
                 list.add(task);
                 if (task.text != null) {
                     mAdapter.notifyDataSetChanged();
                 }
                 if (task.permanentNotification) {
-                    style.addLine(((ItemModel) dataSnapshot.getValue(ItemModel.class)).text);
+                    style.addLine(((Task) dataSnapshot.getValue(Task.class)).text);
                     notification.setStyle(style);
                     notification.setContentIntent(notificationPending);
                     ((NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE)).notify(6383165, notification.build());
@@ -146,10 +131,14 @@ public class AllTasksFragment extends Fragment {
 
         }
     };
-    String selectedFolder;
+    Query query;
+
+    @BindView(R.id.recyclerViewAllTasks) RecyclerView recyclerView;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_tasks, container, false);
+        ButterKnife.bind(this, view);
+        query = Query.getInstance();
         manager = (NotificationManager)getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 
         manager.cancel(6383165);
@@ -157,14 +146,21 @@ public class AllTasksFragment extends Fragment {
         mBlock = (LinearLayout) view.findViewById(R.id.block);
         notification = new Builder(getContext()).setSmallIcon(R.drawable.ic_logo_notification).setContentTitle("Your Tasks").setOngoing(true);
         referenceToAllTasks = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("list");
-        referenceToAllTasks.addChildEventListener(childEventListener);
+        if (getArguments() != null){
+            String folder = getArguments().getString("title");
+            FirebaseDatabase.getInstance().getReference()
+                    .child("users")
+                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child("list")
+                    .orderByChild("folder")
+                    .equalTo(folder)
+                    .addChildEventListener(childEventListener);
+        }else referenceToAllTasks.addChildEventListener(childEventListener);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewAllTasks);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        mAdapter = new RecyclerAdapter(this.list);
-        recyclerView.setLayoutManager(this.linearLayoutManager);
-        recyclerView.setAdapter(this.mAdapter);
-        new ItemTouchHelper(this.itemTouchHelperCallback).attachToRecyclerView(this.recyclerView);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(mAdapter);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
 
         getActivity().findViewById(R.id.fab).setVisibility(View.VISIBLE);
 

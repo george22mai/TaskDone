@@ -1,21 +1,21 @@
-package com.taskdone.Utils;
+package com.taskdone.Utils.Objects;
 
 import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FolderModelSelect {
+public class FolderSelect {
     public ImageView icon;
     public boolean state = false;
     public String title;
     public TextView tv;
     public View view;
 
-    public FolderModelSelect() {
+    public FolderSelect() {
     }
 
-    public FolderModelSelect(int id, String title, ImageView icon) {
+    public FolderSelect(int id, String title, ImageView icon) {
         this.title = title;
         this.icon = icon;
     }

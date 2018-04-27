@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import com.taskdone.AddTaskActivity;
 import com.taskdone.R;
-import com.taskdone.Utils.Reminder;
-import com.taskdone.Utils.ReminderAdapter;
+import com.taskdone.Utils.Objects.Reminder;
+import com.taskdone.Utils.Adapters.ReminderAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
