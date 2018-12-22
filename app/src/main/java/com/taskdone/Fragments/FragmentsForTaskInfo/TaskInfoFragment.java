@@ -58,8 +58,6 @@ public class TaskInfoFragment extends Fragment {
     @BindView(R.id.deadline_tv) TextView deadlineText;
     @BindView(R.id.deadline_tv_optional) TextView deadlineTextOptional;
     @BindView(R.id.switch_perm_notification) SwitchCompat permanentSwitch;
-//    @BindView(R.id.reminders_tv) TextView remindersText;
-//    @BindView(R.id.reminders_tv_optional) TextView remindersTextOptional;
     @BindView(R.id.select_folder_tv) TextView selectFolderText;
     @BindView(R.id.select_folder_tv_optional) TextView selectFolderTextOptional;
     @BindView(R.id.task) TextView taskText;
@@ -162,14 +160,7 @@ public class TaskInfoFragment extends Fragment {
     }
 
     void switchPermanentNotification() {
-        NotificationManager notificationManager = (NotificationManager) getContext().getSystemService("notification");
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 1, new Intent(getContext(), MainActivity.class), 0);
-        NotificationCompat.Builder permnanentNotification = new NotificationCompat.Builder(getContext()).setSmallIcon(R.drawable.ic_logo_notification).setContentTitle(this.taskText.getText().toString()).setContentIntent(pendingIntent).setGroup("GRUP").setOngoing(true);
-        NotificationCompat.Builder summaryNotification = new NotificationCompat.Builder(getContext()).setSmallIcon(R.drawable.ic_logo_notification).setContentIntent(pendingIntent).setGroup("GRUP").setGroupSummary(true).setOngoing(true);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("list").child(TASK_ID).child("permanentNotification");
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("general", 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        int total = sharedPreferences.getInt("activePNotifications", 0);
         if (permanentSwitch.isChecked()) {
             reference.setValue(Boolean.valueOf(true));
         } else {

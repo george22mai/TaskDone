@@ -11,6 +11,6 @@ import com.taskdone.R;
 
 public class ReminderNotification extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
-        ((NotificationManager) context.getSystemService("notification")).notify(55, new Builder(context).setSmallIcon(R.drawable.ic_logo_notification).setSound(RingtoneManager.getDefaultUri(2)).setContentTitle("Reminder").setContentText(intent.getExtras().getString("text")).build());
+        ((NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE)).notify(55, new Builder(context).setSmallIcon(R.drawable.ic_logo_notification).setSound(RingtoneManager.getDefaultUri(2)).setContentTitle("Reminder").setContentText(intent.getExtras().getString("text")).build());
     }
 }

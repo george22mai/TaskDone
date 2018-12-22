@@ -1,5 +1,6 @@
 package com.taskdone.Fragments;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat.InboxStyle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +21,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -67,6 +69,7 @@ public class ShowTasksFragment extends Fragment {
                     public void onDismissed(Snackbar transientBottomBar, int event) {
                         style = new InboxStyle();
                         manager.cancel(6383165);
+                        list.clear();
                         referenceToAllTasks.addChildEventListener(childEventListener);
                     }
                 });
@@ -86,7 +89,7 @@ public class ShowTasksFragment extends Fragment {
     List<Task> list = new ArrayList();
     RecyclerAdapter mAdapter = new RecyclerAdapter(list);
     LinearLayout mBlock;
-    Builder notification;
+    NotificationCompat.Builder notification;
     DatabaseReference referenceToAllTasks;
     LinearLayout linearLayout;
     InboxStyle style = new InboxStyle();
@@ -144,7 +147,13 @@ public class ShowTasksFragment extends Fragment {
         manager.cancel(6383165);
         notificationPending = PendingIntent.getActivity(getContext(), 0, new Intent(getContext(), MainActivity.class),PendingIntent.FLAG_UPDATE_CURRENT);
         mBlock = (LinearLayout) view.findViewById(R.id.block);
-        notification = new Builder(getContext()).setSmallIcon(R.drawable.ic_logo_notification).setContentTitle("Your Tasks").setOngoing(true);
+        NotificationChannel notificationChannel = new NotificationChannel("canal_id", "TaskDone", NotificationManager.IMPORTANCE_DEFAULT);
+        manager.createNotificationChannel(notificationChannel);
+        notification = new Builder(getContext(), notificationChannel.getId())
+                .setSmallIcon(R.drawable.ic_logo_notification)
+                .setContentTitle("Your Tasks")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true);
         referenceToAllTasks = FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("list");
         if (getArguments() != null){
             String folder = getArguments().getString("title");
